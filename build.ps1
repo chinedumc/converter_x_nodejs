@@ -13,12 +13,6 @@ function Test-Command {
 # Check prerequisites
 Write-Host "Checking prerequisites..." -ForegroundColor Yellow
 
-# Check Python
-if (-not (Test-Command python)) {
-    Write-Host "Error: Python is not installed" -ForegroundColor Red
-    exit 1
-}
-
 # Check Node.js
 if (-not (Test-Command node)) {
     Write-Host "Error: Node.js is not installed" -ForegroundColor Red
@@ -39,21 +33,16 @@ New-Item -ItemType Directory -Force -Path dist
 function Build-Backend {
     Write-Host "\nBuilding backend..." -ForegroundColor Green
     
-    # Create and activate virtual environment
-    python -m venv dist\venv
-    .\dist\venv\Scripts\Activate
-
-    # Install production dependencies
-    pip install -r backend\requirements.txt
-
     # Copy backend files
     Copy-Item -Path backend\* -Destination dist\backend -Recurse -Force
     
+    # Install production dependencies
+    Set-Location dist\backend
+    npm ci --production
+    Set-Location ..\..
+    
     # Create production .env file
     Copy-Item -Path .env.example -Destination dist\backend\.env
-
-    # Deactivate virtual environment
-    deactivate
 }
 
 # Function to build frontend
@@ -71,7 +60,7 @@ function Build-Frontend {
     Copy-Item -Path .next -Destination ..\dist\frontend\.next -Recurse -Force
     Copy-Item -Path public -Destination ..\dist\frontend\public -Recurse -Force
     Copy-Item -Path package.json -Destination ..\dist\frontend\package.json
-    Copy-Item -Path next.config.js -Destination ..\dist\frontend\next.config.js
+    Copy-Item -Path next.config.ts -Destination ..\dist\frontend\next.config.ts
 
     Set-Location ..
 }
@@ -86,7 +75,7 @@ function Create-StartupScripts {
     echo Starting Excel to XML Converter...
     
     REM Start backend server
-    start cmd /k "cd backend && ..\venv\Scripts\activate && python run.py"
+    start cmd /k "cd backend && npm start"
     
     REM Start frontend server
     start cmd /k "cd frontend && npm start"
@@ -101,7 +90,6 @@ function Create-StartupScripts {
 # Deployment Instructions
 
 ## Prerequisites
-- Python 3.8+
 - Node.js 18+
 - npm
 

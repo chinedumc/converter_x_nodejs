@@ -1,6 +1,8 @@
-__pycache__
-*.pyc
-*.pyo
-*.pyd
+node_modules
+npm-debug.log*
 .env
 logs
+*.log
+.git
+.gitignore
+README.md
