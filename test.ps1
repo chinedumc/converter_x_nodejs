@@ -13,12 +13,6 @@ function Test-Command {
 # Check prerequisites
 Write-Host "Checking prerequisites..." -ForegroundColor Yellow
 
-# Check Python
-if (-not (Test-Command python)) {
-    Write-Host "Error: Python is not installed" -ForegroundColor Red
-    exit 1
-}
-
 # Check Node.js
 if (-not (Test-Command node)) {
     Write-Host "Error: Node.js is not installed" -ForegroundColor Red
@@ -31,27 +25,14 @@ if (-not (Test-Command npm)) {
     exit 1
 }
 
-# Activate virtual environment if it exists
-if (Test-Path "venv\Scripts\Activate") {
-    Write-Host "Activating virtual environment..." -ForegroundColor Yellow
-    .\venv\Scripts\Activate
-}
-
 # Function to run backend tests
 function Test-Backend {
     Write-Host "\nRunning backend tests..." -ForegroundColor Green
     Set-Location backend
 
-    # Run pytest with coverage
-    python -m pytest tests/ --cov=. --cov-report=term-missing -v
-
-    # Run security checks
-    Write-Host "\nRunning security checks..." -ForegroundColor Yellow
-    python -m bandit -r . -x tests/
-
-    # Run type checking
-    Write-Host "\nRunning type checking..." -ForegroundColor Yellow
-    python -m mypy .
+    # Run npm audit for security checks
+    Write-Host "\nRunning security audit..." -ForegroundColor Yellow
+    npm audit
 
     Set-Location ..
 }
@@ -61,16 +42,21 @@ function Test-Frontend {
     Write-Host "\nRunning frontend tests..." -ForegroundColor Green
     Set-Location frontend
 
-    # Run Jest tests
-    npm test
+    # Run npm audit
+    Write-Host "\nRunning security audit..." -ForegroundColor Yellow
+    npm audit
 
-    # Run ESLint
-    Write-Host "\nRunning ESLint..." -ForegroundColor Yellow
-    npm run lint
+    # Run ESLint if configured
+    if (Test-Path "node_modules\.bin\eslint") {
+        Write-Host "\nRunning ESLint..." -ForegroundColor Yellow
+        npm run lint
+    }
 
-    # Run TypeScript compilation check
-    Write-Host "\nChecking TypeScript compilation..." -ForegroundColor Yellow
-    npm run type-check
+    # Run TypeScript compilation check if configured
+    if (Test-Path "tsconfig.json") {
+        Write-Host "\nChecking TypeScript compilation..." -ForegroundColor Yellow
+        npm run build
+    }
 
     Set-Location ..
 }

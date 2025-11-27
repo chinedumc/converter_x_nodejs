@@ -13,12 +13,6 @@ function Test-Command {
 # Check prerequisites
 Write-Host "Checking prerequisites..."
 
-# Check Python
-if (-not (Test-Command python)) {
-    Write-Host "Error: Python is not installed" -ForegroundColor Red
-    exit 1
-}
-
 # Check Node.js
 if (-not (Test-Command node)) {
     Write-Host "Error: Node.js is not installed" -ForegroundColor Red
@@ -31,21 +25,14 @@ if (-not (Test-Command npm)) {
     exit 1
 }
 
-# Create and activate Python virtual environment
-Write-Host "Setting up Python virtual environment..." -ForegroundColor Yellow
-if (-not (Test-Path "venv")) {
-    python -m venv venv
-}
+# Install Node.js dependencies for backend
+Write-Host "Installing backend dependencies..." -ForegroundColor Yellow
+Set-Location backend
+npm install
+Set-Location ..
 
-# Activate virtual environment
-.\venv\Scripts\Activate
-
-# Install Python dependencies
-Write-Host "Installing Python dependencies..." -ForegroundColor Yellow
-pip install -r backend\requirements.txt
-
-# Install Node.js dependencies
-Write-Host "Installing Node.js dependencies..." -ForegroundColor Yellow
+# Install Node.js dependencies for frontend
+Write-Host "Installing frontend dependencies..." -ForegroundColor Yellow
 Set-Location frontend
 npm install
 Set-Location ..
@@ -54,7 +41,7 @@ Set-Location ..
 function Start-Backend {
     Write-Host "Starting backend server..." -ForegroundColor Green
     Set-Location backend
-    python run.py
+    npm start
 }
 
 # Function to start the frontend server

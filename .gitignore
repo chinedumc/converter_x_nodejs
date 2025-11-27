@@ -1,9 +1,5 @@
 # Dependencies
 node_modules/
-__pycache__/
-*.py[cod]
-*$py.class
-venv/
 .env
 
 # Build outputs
@@ -47,7 +43,6 @@ Thumbs.db
 
 # Testing
 coverage/
-.pytest_cache/
 
 # Production files
 /build
@@ -55,3 +50,7 @@ coverage/
 # Misc
 *.pem
 .vercel
+
+# Package lock files (keep only package-lock.json)
+yarn.lock
+pnpm-lock.yaml

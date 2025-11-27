@@ -32,9 +32,9 @@ A modern, secure web application for converting Excel files to XML format with a
 
 #### Backend
 
-- FastAPI (Python)
-- Python's built-in logging for structured logging
-- Pandas for Excel processing
+- Node.js with Express
+- Winston for structured logging
+- XLSX library for Excel processing
 - RESTful API with versioning
 - Microservices architecture
 
@@ -43,7 +43,6 @@ A modern, secure web application for converting Excel files to XML format with a
 ### Prerequisites
 
 - Node.js 18+
-- Python 3.8+
 - npm or yarn
 
 ### Installation
@@ -66,7 +65,7 @@ npm install
 
 ```bash
 cd backend
-pip install -r requirements.txt
+npm install
 ```
 
 4. Set up environment variables:
@@ -80,7 +79,7 @@ pip install -r requirements.txt
 
 ```bash
 cd backend
-python run.py
+npm start
 ```
 
 2. Start the frontend development server:
@@ -92,12 +91,15 @@ npm run dev
 
 3. Access the application at `http://localhost:3000`
 
-## API Documentation
+## API Endpoints
 
-When running in development mode, API documentation is available at:
+The backend provides the following RESTful API endpoints:
 
-- Swagger UI: `http://localhost:8000/api/v1/docs`
-- ReDoc: `http://localhost:8000/api/v1/redoc`
+- `GET /` - Health check (Backend status)
+- `GET /api/v1/health` - Detailed health check with version info
+- `POST /api/v1/validate` - Validate Excel file
+- `POST /api/v1/convert` - Convert Excel to XML
+- `GET /api/v1/download/:fileId` - Download converted XML file
 
 ## Security Features
 
@@ -131,8 +133,8 @@ When running in development mode, API documentation is available at:
 
 ### Logging Integration
 
-- Structured logging with Python's logging module
-- Daily log rotation with 90-day retention
+- Structured logging with Winston
+- Log file rotation with configurable retention
 - Comprehensive error tracking and aggregation
 
 ## Development
@@ -140,15 +142,27 @@ When running in development mode, API documentation is available at:
 ### Code Style
 
 - ESLint + Prettier (Frontend)
-- Black + isort (Backend)
+- ESLint (Backend)
 - TypeScript strict mode
 
 ### Testing
 
 - Jest for frontend
-- pytest for backend
 - Integration tests
 - Security testing
+
+## Docker Deployment
+
+The application can be deployed using Docker Compose:
+
+```bash
+docker-compose up --build
+```
+
+This will start:
+- Frontend (Next.js) on port 3000
+- Backend (Express) on port 8000
+- Nginx reverse proxy on port 80
 
 ## Contributing
 
@@ -164,8 +178,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- FastAPI
+- Express.js
 - Next.js
 - Tailwind CSS
-- Python logging
+- Winston logging
 - OWASP
