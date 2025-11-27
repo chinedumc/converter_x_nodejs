@@ -11,14 +11,14 @@ const { verifySessionTimeout } = require('../utils/auth');
 
 /**
  * XSS patterns to check for
+ * These patterns are designed to catch common XSS attack vectors
  */
 const XSS_PATTERNS = [
-  /<script[^>]*>[\s\S]*?<\/script>/gi,
-  /javascript:/gi,
-  /onerror=/gi,
-  /onload=/gi,
-  /eval\(/gi,
-  /document\.cookie/gi
+  /<\s*script\b[^>]*>[\s\S]*?<\s*\/\s*script\b[^>]*>/gi,
+  /javascript\s*:/gi,
+  /on\w+\s*=/gi,  // Catch all event handlers like onerror, onload, onclick, etc.
+  /eval\s*\(/gi,
+  /document\s*\.\s*cookie/gi
 ];
 
 /**

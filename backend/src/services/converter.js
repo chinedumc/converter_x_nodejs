@@ -12,6 +12,12 @@ const config = require('../config');
 const { auditLogger } = require('../utils/logger');
 const { encryption } = require('../utils/encryption');
 
+// XML element name constants
+const XML_ROOT_ELEMENT = 'CALLREPORT';
+const XML_HEADER_ELEMENT = 'HEADER';
+const XML_BODY_ELEMENT = 'BODY';
+const XML_ROW_ELEMENT = 'CALLREPORT_DATA';
+
 /**
  * Excel to XML Converter Class
  */
@@ -19,6 +25,7 @@ class ExcelToXMLConverter {
   constructor() {
     this.namespace = config.XML_NAMESPACE;
     this.schemaVersion = config.XML_SCHEMA_VERSION;
+    this.rowElementName = XML_ROW_ELEMENT;
   }
 
   /**
@@ -59,7 +66,7 @@ class ExcelToXMLConverter {
       return;
     }
 
-    const header = root.ele('HEADER');
+    const header = root.ele(XML_HEADER_ELEMENT);
 
     for (const [key, value] of Object.entries(headerFields)) {
       try {
@@ -103,7 +110,7 @@ class ExcelToXMLConverter {
    */
   _createDataSection(body, records) {
     for (const record of records) {
-      const row = body.ele('CALLREPORT_DATA');
+      const row = body.ele(this.rowElementName);
       for (const [fieldName, value] of Object.entries(record)) {
         // Sanitize field name
         const sanitizedName = this._sanitizeXmlTag(fieldName);
@@ -155,7 +162,7 @@ class ExcelToXMLConverter {
 
       // Create root element
       const root = create({ version: '1.0', encoding: 'utf-8' })
-        .ele('CALLREPORT');
+        .ele(XML_ROOT_ELEMENT);
 
       // Add header fields if provided
       if (headerFields && Object.keys(headerFields).length > 0) {
@@ -163,7 +170,7 @@ class ExcelToXMLConverter {
       }
 
       // Create BODY element
-      const body = root.ele('BODY');
+      const body = root.ele(XML_BODY_ELEMENT);
 
       // Create data section
       this._createDataSection(body, records);

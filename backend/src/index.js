@@ -22,8 +22,20 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Security headers with helmet
+// CSP configuration - use a permissive policy in debug mode for development tools
 app.use(helmet({
-  contentSecurityPolicy: config.DEBUG ? false : undefined
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: config.DEBUG ? ["'self'", "'unsafe-inline'", "'unsafe-eval'"] : ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:"],
+      fontSrc: ["'self'", "data:"],
+      connectSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: []
+    }
+  }
 }));
 
 // CORS configuration

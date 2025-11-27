@@ -219,17 +219,21 @@ router.post('/convert', upload.single('file'), async (req, res) => {
     // Generate download URL
     const downloadUrl = `${config.API_V1_PREFIX}/download/${fileId}`;
 
+    // Determine the actual output file (could be encrypted)
+    const encryptedPath = outputPath.replace('.xml', '.xml.enc');
+    const actualOutputPath = fs.existsSync(encryptedPath) ? encryptedPath : outputPath;
+
     // Log successful conversion
     const conversionTime = (Date.now() - startTime) / 1000;
     auditLogger.logConversionEvent(
       'system',
       req.file.originalname,
-      outputPath,
+      actualOutputPath,
       conversionTime,
       'success',
       {
         input_size: fileSize,
-        output_size: fs.existsSync(outputPath) ? fs.statSync(outputPath).size : 0,
+        output_size: fs.existsSync(actualOutputPath) ? fs.statSync(actualOutputPath).size : 0,
         header_fields: Object.keys(headerFields).length
       }
     );
