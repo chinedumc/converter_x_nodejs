@@ -168,13 +168,13 @@ class ExcelToXMLConverter {
 			// Read Excel file
 			let workbook;
 			try {
-				// Read as raw text - no formatting, no date conversion
+				// Read with formatting preserved - use displayed values, not raw numeric values
 				workbook = XLSX.readFile(inputFile, {
 					type: "file",
 					raw: false,
 					cellText: true,
 					cellDates: false,
-					cellNF: false,
+					cellNF: true,
 					cellStyles: false,
 				});
 			} catch (error) {
@@ -282,8 +282,15 @@ class ExcelToXMLConverter {
 				return false;
 			}
 
-			// Try to read the file
-			const workbook = XLSX.readFile(filePath);
+			// Try to read the file with same options as convert method
+			const workbook = XLSX.readFile(filePath, {
+				type: "file",
+				raw: false,
+				cellText: true,
+				cellDates: false,
+				cellNF: true,
+				cellStyles: false,
+			});
 
 			// Check if file has sheets
 			if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
@@ -292,7 +299,7 @@ class ExcelToXMLConverter {
 
 			// Check if first sheet has data
 			const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-			const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+			const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1, raw: false, defval: "" });
 
 			if (!jsonData || jsonData.length === 0) {
 				return false;
