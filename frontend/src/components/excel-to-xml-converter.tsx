@@ -432,7 +432,7 @@ export function ExcelToXmlConverter() {
 						<Button
 							onClick={handleAddNewHeaderField}
 							variant="default"
-							className="mt-3 w-full md:w-auto bg-primary/15 text-primary font-medium border border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-2 focus-visible:ring-ring"
+							className="mt-3 w-full md:w-auto"
 							aria-label="Add header field"
 						>
 							<PlusCircle className="mr-2 h-4 w-4" aria-hidden="true" />
