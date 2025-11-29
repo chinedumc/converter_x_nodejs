@@ -220,15 +220,15 @@ export function ExcelToXmlConverter() {
 			return false;
 		}
 
-		// Validate that at least one header field is added
-		if (headerFields.length === 0) {
-			toast({
-				title: "Validation Error",
-				description: "Please add at least one header field before conversion.",
-				variant: "destructive",
-			});
-			return false;
-		}
+		// Header fields are optional - allow conversion even if none are added
+		// if (headerFields.length === 0) {
+		// 	toast({
+		// 		title: "Validation Error",
+		// 		description: "Please add at least one header field before conversion.",
+		// 		variant: "destructive",
+		// 	});
+		// 	return false;
+		// }
 
 		// Validate any incomplete header fields
 		if (currentTagName || currentTagValue) {
@@ -285,6 +285,11 @@ export function ExcelToXmlConverter() {
 		}, 200);
 
 		try {
+			// Debug: Check what we're sending
+			console.log("=== SENDING TO BACKEND ===");
+			console.log("headerFields:", headerFields);
+			console.log("headerFields JSON:", JSON.stringify(headerFields));
+
 			// Prepare request data with header fields
 			const requestData = {
 				header_fields: headerFields.map((field) => ({

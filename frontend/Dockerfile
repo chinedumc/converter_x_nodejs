@@ -29,4 +29,5 @@ COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 3000
 
-CMD ["npx", "next", "start"]
+# Ensure Next.js binds to all interfaces for nginx to reach it
+CMD ["npx", "next", "start", "-H", "0.0.0.0", "-p", "3000"]
