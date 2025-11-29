@@ -141,7 +141,14 @@ class ExcelToXMLConverter {
 			for (const [fieldName, value] of Object.entries(record)) {
 				// Sanitize field name
 				const sanitizedName = this._sanitizeXmlTag(fieldName);
-				row.ele(sanitizedName).txt(value);
+				// Skip empty values entirely to avoid empty tags like <COL_38/>
+				if (
+					value !== undefined &&
+					value !== null &&
+					String(value).trim() !== ""
+				) {
+					row.ele(sanitizedName).txt(value);
+				}
 			}
 		}
 	}
