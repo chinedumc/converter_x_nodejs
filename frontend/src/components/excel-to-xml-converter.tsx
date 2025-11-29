@@ -431,12 +431,12 @@ export function ExcelToXmlConverter() {
 						</div>
 						<Button
 							onClick={handleAddNewHeaderField}
-							variant="default"
-							className="mt-3 w-full md:w-auto"
-							aria-label="Add header field"
+							variant="outline"
+							className="mt-3 w-full md:w-auto bg-primary text-primary-foreground hover:bg-primary/90 "
+
+						
 						>
-							<PlusCircle className="mr-2 h-4 w-4" aria-hidden="true" />
-							<span>Add This Header Field</span>
+							<PlusCircle className="mr-2 h-4 w-4" /> Add This Header Field
 						</Button>
 					</div>
 
