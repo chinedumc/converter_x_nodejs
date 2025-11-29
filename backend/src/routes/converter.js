@@ -195,7 +195,7 @@ router.post("/convert", upload.single("file"), async (req, res) => {
 					)}`
 				);
 				for (const field of headerArray) {
-					if (field.tagName && field.tagValue !== undefined) {
+					if (field.tagName && field.tagValue) {
 						const tagName = field.tagName.replace(/\s+/g, "_");
 						headerFields[tagName] = field.tagValue;
 					}
@@ -219,7 +219,7 @@ router.post("/convert", upload.single("file"), async (req, res) => {
 					`Parsed header_fields directly: ${JSON.stringify(headerArray)}`
 				);
 				for (const field of headerArray) {
-					if (field.tagName && field.tagValue !== undefined) {
+					if (field.tagName && field.tagValue) {
 						const tagName = String(field.tagName).replace(/\s+/g, "_");
 						headerFields[tagName] = field.tagValue;
 					}
